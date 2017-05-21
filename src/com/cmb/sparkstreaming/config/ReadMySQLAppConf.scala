@@ -16,8 +16,8 @@ object ReadMySQLAppConf {
   private val appConf = new HashMap[String, String]()
   // 从MySQL中获取app_smap表数据
   private val appSMAP = new HashMap[String, String]()
-  // 从MySQL中获取需要拆分的分行
-  private val bbkTopic = new HashMap[String, String]()
+  // 从MySQL中获取应用分行对应的结果topic名
+  private val resultTopic = new HashMap[String, String]()
 
   private val prop = new Properties()
 
@@ -66,11 +66,11 @@ object ReadMySQLAppConf {
   }
 
 
-  def getBbkTopic(sc : SparkContext, appName : String) : HashMap[String, String] = {
+  def getResultTopic(sc : SparkContext, appName : String) : HashMap[String, String] = {
     val sqlContext = new SQLContext(sc)
     val topic_stat = sqlContext.read.jdbc(prop.getProperty("url"), "topic_stat", Array("app_name = '"+appName+"'"),prop)
     val rows = topic_stat.collect()
-    rows.foreach( row => bbkTopic.put(row.getString(0), row.getString(3)))
-    bbkTopic
+    rows.foreach( row => resultTopic.put(row.getString(0), row.getString(3)))
+    resultTopic
   }
 }

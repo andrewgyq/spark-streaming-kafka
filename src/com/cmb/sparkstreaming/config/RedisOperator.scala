@@ -5,7 +5,7 @@ import java.util.TreeSet
 import java.util.{HashSet, Properties}
 
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig
-import redis.clients.jedis.{HostAndPort, JedisCluster, JedisPool}
+import redis.clients.jedis.{HostAndPort, JedisCluster}
 
 /**
   * Created by 80374643 on 2017/5/15.
@@ -72,5 +72,21 @@ object RedisOperator {
     }
 
     keys
+  }
+
+  // 根据Key查询Value
+  def getByKey(jedisCluster : JedisCluster, key : String) : String = {
+    val value = jedisCluster.get(key)
+    value
+  }
+
+  // 写入Redis
+  def set(jedisCluster : JedisCluster, key : String, value : String) = {
+    jedisCluster.set(key, value)
+  }
+
+  // 按照Key删除记录
+  def deleteByKey(jedisCluster : JedisCluster, key : String) = {
+    jedisCluster.del(key)
   }
 }
